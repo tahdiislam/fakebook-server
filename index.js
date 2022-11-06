@@ -29,6 +29,17 @@ async function run() {
   try {
     const Posts = client.db("fakebook").collection("posts");
 
+    // get all post of a specific user
+    app.get("/posts", async (req, res) => {
+      const email = req.query.email;
+      let query = {}
+      if(email){
+        query = { email: email };
+      }
+      const cursor = Posts.find(query);
+      const storedPosts = await cursor.toArray();
+      res.status(200).send(storedPosts);
+    });
     // create a new user
     app.post("/posts", async (req, res) => {
       const post = req.body;
